@@ -13,7 +13,9 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  app
+  await app.init();
+
+  await app
     .register(SecureSessionPlugin, {
       secret: 'myverylongserectthatisover32characterslong',
       salt: 'saltwithlength16',
@@ -27,17 +29,17 @@ async function bootstrap() {
         console.log('SecureSessionPlugin completed');
       }),
     );
-  app.register(fastifyPassport.initialize()).then((fastifyInstance) =>
+  await app.register(fastifyPassport.initialize()).then((fastifyInstance) =>
     fastifyInstance.after(() => {
       console.log('fastifyPassport.initialize completed');
     }),
   );
-  app.register(fastifyPassport.secureSession()).then((fastifyInstance) =>
+  await app.register(fastifyPassport.secureSession()).then((fastifyInstance) =>
     fastifyInstance.after(() => {
       console.log('fastifyPassport.secureSession completed');
     }),
   );
 
-  await app.listen(3001);
+  await app.listen(3000);
 }
 bootstrap();
